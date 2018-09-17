@@ -4,28 +4,37 @@ using System.Collections;
 //require controller
 [RequireComponent (typeof (Controller2D))]
 public class Player : MonoBehaviour {
+    public int jumpsAllowed = 1;
+    int jumpsPerformed = 0;
 
 	public float maxJumpHeight = 4;
 	public float minJumpHeight = 1;
 	public float timeToJumpApex = .4f;
 	float accelerationTimeAirborne = .2f;
 	float accelerationTimeGrounded = .1f;
-	public float moveSpeed = 6;
+
+    public Vector2 wallJumpClimb;
+    public Vector2 wallJumpOff;
+    public Vector2 wallLeap;
+
+    public float wallSlideSpeedMax = 3;
+    public float wallStickTime = .25f;
+    float timeToWallUnstick;
+
+    float gravity;
+    float maxJumpVelocity;
+    float minJumpVelocity;
+
+    public float moveSpeed = 6;
 	public float sprintFactor = 2;
 	float originalMoveSpeed;
+    int lastTouchedDirectionX = 1;
 
-	public Vector2 wallJumpClimb;
-	public Vector2 wallJumpOff;
-	public Vector2 wallLeap;
+    public int lungesAllowed = 1;
+    int lungesPerformed = 0;
+    public float lungeFactor = 3;
 
-	public float wallSlideSpeedMax = 3;
-	public float wallStickTime = .25f;
-	float timeToWallUnstick;
-
-	float gravity;
-	float maxJumpVelocity;
-	float minJumpVelocity;
-	Vector3 velocity;
+    Vector3 velocity;
 	float velocityXSmoothing;
 
 	//reference to controller
@@ -62,10 +71,16 @@ public class Player : MonoBehaviour {
 
 	public void SetDirectionalInput (Vector2 input) {
 		directionalInput = input;
+        if (input.x > 0){
+            lastTouchedDirectionX = 1;
+        }else if(input.x < 0){
+            lastTouchedDirectionX = -1;
+        }
 	}
 
 	public void OnJumpInputDown() {
-		if (wallSliding) {
+        if (wallSliding && jumpsPerformed < jumpsAllowed) {
+            jumpsPerformed ++;
 			if (wallDirX == directionalInput.x) {
 				velocity.x = -wallDirX * wallJumpClimb.x;
 				velocity.y = wallJumpClimb.y;
@@ -78,17 +93,24 @@ public class Player : MonoBehaviour {
 				velocity.x = -wallDirX * wallLeap.x;
 				velocity.y = wallLeap.y;
 			}
-		}
-		if (controller.collisions.below) {
-			if (controller.collisions.slidingDownMaxSlope) {
+        }else if (controller.collisions.below) {
+            jumpsPerformed = 0;
+            lungesPerformed = 0;
+            if (controller.collisions.slidingDownMaxSlope && jumpsPerformed < jumpsAllowed) {
 				if (directionalInput.x != -Mathf.Sign (controller.collisions.slopeNormal.x)) { // not jumping against max slope
-					velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
+                    jumpsPerformed++;
+                    velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
 					velocity.x = maxJumpVelocity * controller.collisions.slopeNormal.x;
 				}
-			} else {
+            } else if (jumpsPerformed < jumpsAllowed){
+                jumpsPerformed++;
 				velocity.y = maxJumpVelocity;
 			}
-		}
+        }else if(jumpsPerformed < jumpsAllowed){
+            jumpsPerformed++;
+            velocity.y = maxJumpVelocity;
+        }
+    
 	}
 
 	public void OnJumpInputUp() {
@@ -98,6 +120,14 @@ public class Player : MonoBehaviour {
 	}
 		
 	public void OnSprintInputDown(){
+        if (!controller.collisions.below && lungesPerformed < lungesAllowed){
+            lungesPerformed++;
+            velocity.y = 0;
+            velocity.x = velocity.x * lungeFactor;
+            if (Mathf.Abs(velocity.x)<minJumpVelocity){
+                velocity.x = lastTouchedDirectionX * minJumpVelocity;
+            }
+        }
 		moveSpeed *= sprintFactor;
 	}
 
@@ -105,11 +135,14 @@ public class Player : MonoBehaviour {
 		moveSpeed = originalMoveSpeed;
 	}
 
-	void HandleWallSliding() {
+
+    void HandleWallSliding() {
 		wallDirX = (controller.collisions.left) ? -1 : 1;
 		wallSliding = false;
 		if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0) {
 			wallSliding = true;
+            jumpsPerformed = 0;
+            lungesPerformed = 0;
 
 			if (velocity.y < -wallSlideSpeedMax) {
 				velocity.y = -wallSlideSpeedMax;
