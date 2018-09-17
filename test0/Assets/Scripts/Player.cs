@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//require controller
 [RequireComponent (typeof (Controller2D))]
 public class Player : MonoBehaviour {
 
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour {
 	Vector3 velocity;
 	float velocityXSmoothing;
 
+	//reference to controller
 	Controller2D controller;
 
 	Vector2 directionalInput;
@@ -34,6 +36,7 @@ public class Player : MonoBehaviour {
 	int wallDirX;
 
 	void Start() {
+		//initialize controller
 		controller = GetComponent<Controller2D> ();
 
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
