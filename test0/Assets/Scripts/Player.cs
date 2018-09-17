@@ -9,7 +9,9 @@ public class Player : MonoBehaviour {
 	public float timeToJumpApex = .4f;
 	float accelerationTimeAirborne = .2f;
 	float accelerationTimeGrounded = .1f;
-	float moveSpeed = 6;
+	public float moveSpeed = 6;
+	public float sprintFactor = 2;
+	float originalMoveSpeed;
 
 	public Vector2 wallJumpClimb;
 	public Vector2 wallJumpOff;
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour {
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
 		minJumpVelocity = Mathf.Sqrt (2 * Mathf.Abs (gravity) * minJumpHeight);
+		originalMoveSpeed = moveSpeed;
 	}
 
 	void Update() {
@@ -91,6 +94,13 @@ public class Player : MonoBehaviour {
 		}
 	}
 		
+	public void OnSprintInputDown(){
+		moveSpeed *= sprintFactor;
+	}
+
+	public void OnSprintInputUp(){
+		moveSpeed = originalMoveSpeed;
+	}
 
 	void HandleWallSliding() {
 		wallDirX = (controller.collisions.left) ? -1 : 1;
