@@ -33,6 +33,8 @@ public class Player : MonoBehaviour {
     public int lungesAllowed = 1;
     int lungesPerformed = 0;
     public float lungeFactor = 3;
+    public float minimumLunge = 4;
+
 
     Vector3 velocity;
 	float velocityXSmoothing;
@@ -44,6 +46,9 @@ public class Player : MonoBehaviour {
 	bool wallSliding;
 	int wallDirX;
 
+    Vector3 ogScale;
+
+    private Animator anim;
 	void Start() {
 		//initialize controller
 		controller = GetComponent<Controller2D> ();
@@ -52,10 +57,13 @@ public class Player : MonoBehaviour {
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
 		minJumpVelocity = Mathf.Sqrt (2 * Mathf.Abs (gravity) * minJumpHeight);
 		originalMoveSpeed = moveSpeed;
+        anim = GetComponent<Animator>();
+        ogScale = transform.localScale;
 	}
 
 	void Update() {
-		CalculateVelocity ();
+        HandleAnimation();
+        CalculateVelocity ();
 		HandleWallSliding ();
 
 		controller.Move (velocity * Time.deltaTime, directionalInput);
@@ -66,9 +74,42 @@ public class Player : MonoBehaviour {
 			} else {
 				velocity.y = 0;
 			}
+            if (controller.collisions.below){
+                jumpsPerformed = 0;
+                lungesPerformed = 0;
+            }else{
+            }
 		}
-	}
 
+
+	}
+    public void HandleAnimation(){
+
+        if(!controller.collisions.below){
+            anim.SetTrigger("jump");
+        }else{
+            if (Mathf.Abs(directionalInput.x) > 0)
+            {
+                anim.SetTrigger("walk");
+            }
+            else
+            {
+                anim.SetTrigger("idle");
+            }
+        }
+
+        if (directionalInput.x>0){
+            if (transform.localScale != ogScale){
+                transform.localScale = ogScale;
+            }
+        }else if(directionalInput.x<0) {
+            Vector3 newScale = ogScale;
+            newScale.x *= -1;
+            if (transform.localScale != newScale){
+                transform.localScale = newScale;
+            }
+        }
+    }
 	public void SetDirectionalInput (Vector2 input) {
 		directionalInput = input;
         if (input.x > 0){
@@ -76,12 +117,15 @@ public class Player : MonoBehaviour {
         }else if(input.x < 0){
             lastTouchedDirectionX = -1;
         }
+
 	}
 
 	public void OnJumpInputDown() {
+        anim.SetTrigger("jump");
         if (wallSliding && jumpsPerformed < jumpsAllowed) {
             jumpsPerformed ++;
-			if (wallDirX == directionalInput.x) {
+              //anim.SetTrigger("jump");
+            if (wallDirX == directionalInput.x) {
 				velocity.x = -wallDirX * wallJumpClimb.x;
 				velocity.y = wallJumpClimb.y;
 			}
@@ -104,7 +148,7 @@ public class Player : MonoBehaviour {
 				}
             } else if (jumpsPerformed < jumpsAllowed){
                 jumpsPerformed++;
-				velocity.y = maxJumpVelocity;
+                velocity.y = maxJumpVelocity;
 			}
         }else if(jumpsPerformed < jumpsAllowed){
             jumpsPerformed++;
@@ -123,10 +167,12 @@ public class Player : MonoBehaviour {
         if (!controller.collisions.below && lungesPerformed < lungesAllowed){
             lungesPerformed++;
             velocity.y = 0;
-            velocity.x = velocity.x * lungeFactor;
-            if (Mathf.Abs(velocity.x)<minJumpVelocity){
-                velocity.x = lastTouchedDirectionX * minJumpVelocity;
+
+            float thisVelocityX = Mathf.Abs(velocity.x);
+            if (thisVelocityX < minimumLunge){
+                thisVelocityX = minimumLunge;
             }
+            velocity.x = thisVelocityX * lungeFactor * lastTouchedDirectionX;
         }
 		moveSpeed *= sprintFactor;
 	}
