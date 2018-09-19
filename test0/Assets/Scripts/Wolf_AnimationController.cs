@@ -17,6 +17,9 @@ public class Wolf_AnimationController : MonoBehaviour {
 
     public float jumpAngleSteepness = 1.5f;
     public float jumpAngleLimit = -1;
+    float fallHurtVelocity;
+    float hurtSpinFactor = .001f;
+    float ogHurtSpinFactor;
     // Use this for initialization
     void Start () {
         //initialize player
@@ -26,21 +29,25 @@ public class Wolf_AnimationController : MonoBehaviour {
         ogScale = transform.localScale;
         ogPosition = transform.localPosition;
         currentAngles = transform.eulerAngles;
-
+        fallHurtVelocity = player.fallHurtVelocity;
+        ogHurtSpinFactor = hurtSpinFactor;
     }
     void FixedUpdate()
     {
-        transform.localRotation = Quaternion.Euler(0, 0, 0);
-        transform.localPosition = ogPosition;
+        if (Mathf.Abs(player.velocity.y) < fallHurtVelocity)
+        {
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+            transform.localPosition = ogPosition;
+        }
         currentAngles = transform.eulerAngles;
         if (player.wallSliding)
         {
             anim.SetTrigger("wallSlide");
+            if (player.lastTouchedDirectionX == player.wallDirX){
 
-            if (Mathf.Abs(currentAngles.z) < 70f)
-            {
                 transform.Rotate(Vector3.forward * 70 * player.lastTouchedDirectionX);
             }
+
 
 
             Vector3 newPosition = ogPosition;
@@ -51,17 +58,30 @@ public class Wolf_AnimationController : MonoBehaviour {
         {
             anim.SetTrigger("jump");
             float velocityMultiplier = player.velocity.y * player.lastTouchedDirectionX * jumpAngleSteepness;
-            if (jumpAngleLimit != -1){
+            if (jumpAngleLimit != -1 && Mathf.Abs(player.velocity.y) < fallHurtVelocity)
+            {
                 if (Mathf.Abs(velocityMultiplier) > jumpAngleLimit )
                 {
                     velocityMultiplier = jumpAngleLimit * Mathf.Sign(player.velocity.y) * player.lastTouchedDirectionX;
                 }
             }
 
-            transform.Rotate(Vector3.forward * velocityMultiplier);
+            if ( Mathf.Abs(player.velocity.y) < fallHurtVelocity){
+                transform.Rotate(Vector3.forward * velocityMultiplier);
+            }
+            else{
+                transform.Rotate(Vector3.forward, velocityMultiplier * hurtSpinFactor);
+                if (hurtSpinFactor < ogHurtSpinFactor * 10){
+                    hurtSpinFactor += ogHurtSpinFactor * .1f;
+                }
+
+            }
+
+
         }
         else
         {
+            hurtSpinFactor = ogHurtSpinFactor;
             if (Mathf.Abs(player.velocity.x) > .1f)
             {
                 if (player.isSprinting)
@@ -96,6 +116,8 @@ public class Wolf_AnimationController : MonoBehaviour {
                 transform.localScale = newScale;
             }
         }
+        //transform.Rotate(Vector3.forward, Time.deltaTime);
+       
     }
 
 }

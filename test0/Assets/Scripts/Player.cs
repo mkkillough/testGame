@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
 	public float maxJumpHeight = 4;
 	public float minJumpHeight = 1;
 	public float timeToJumpApex = .4f;
+    public float fallHurtVelocity = 65;
 	float accelerationTimeAirborne = .2f;
 	float accelerationTimeGrounded = .1f;
 
@@ -35,8 +36,10 @@ public class Player : MonoBehaviour {
 
     public int lungesAllowed = 1;
     int lungesPerformed = 0;
-    public float lungeFactor = 3;
-    public float minimumLunge = 4;
+    public float lungeFactor = 5;
+    public float lungeHop = 8;
+    public float minimumLunge = 5;
+    public float maximumLunge = 15;
 
     [HideInInspector]
     public Vector3 velocity;
@@ -49,7 +52,8 @@ public class Player : MonoBehaviour {
 	public Vector2 directionalInput;
 
 	public bool wallSliding;
-	int wallDirX;
+    [HideInInspector]
+	public int wallDirX;
 
     Vector3 ogScale;
 
@@ -141,11 +145,14 @@ public class Player : MonoBehaviour {
 	public void OnSprintInputDown(){
         if (!controller.collisions.below && lungesPerformed < lungesAllowed){
             lungesPerformed++;
-            velocity.y = 0;
+            velocity.y = lungeHop;
 
             float thisVelocityX = Mathf.Abs(velocity.x);
             if (thisVelocityX < minimumLunge){
                 thisVelocityX = minimumLunge;
+            }
+            if (thisVelocityX > maximumLunge){
+                thisVelocityX = maximumLunge;
             }
             velocity.x = thisVelocityX * lungeFactor * lastTouchedDirectionX;
         }
