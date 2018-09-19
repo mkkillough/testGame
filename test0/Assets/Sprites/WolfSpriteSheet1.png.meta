@@ -348,8 +348,8 @@ TextureImporter:
       name: WolfSpriteSheet1_12
       rect:
         serializedVersion: 2
-        x: 483
-        y: 90
+        x: 486
+        y: 80
         width: 152
         height: 75
       alignment: 0

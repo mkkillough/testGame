@@ -47,6 +47,10 @@ public class Player : MonoBehaviour {
 	int wallDirX;
 
     Vector3 ogScale;
+    //Quaternion ogRotation;
+    //public float rotationFactorMultiplier = 10;
+    //public float rotationLimit = 100;
+    //public float rotationFactor;
 
     private Animator anim;
 	void Start() {
@@ -57,12 +61,14 @@ public class Player : MonoBehaviour {
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
 		minJumpVelocity = Mathf.Sqrt (2 * Mathf.Abs (gravity) * minJumpHeight);
 		originalMoveSpeed = moveSpeed;
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
+       
         ogScale = transform.localScale;
+        //ogRotation = transform.localRotation;
 	}
 
 	void Update() {
-        HandleAnimation();
+
         CalculateVelocity ();
 		HandleWallSliding ();
 
@@ -80,23 +86,40 @@ public class Player : MonoBehaviour {
             }else{
             }
 		}
+        HandleAnimation();
 
-
-	}
+    }
     public void HandleAnimation(){
-
-        if(!controller.collisions.below){
-            anim.SetTrigger("jump");
-        }else{
-            if (Mathf.Abs(directionalInput.x) > 0)
-            {
-                anim.SetTrigger("walk");
-            }
-            else
-            {
-                anim.SetTrigger("idle");
-            }
+        if (wallSliding){
+            anim.SetTrigger("wallSlide");
         }
+        else if (!controller.collisions.below){
+            anim.SetTrigger("jump");
+            //rotationFactor = velocity.y /rotationFactorMultiplier;
+            //if (rotationFactor > rotationLimit){
+            //    rotationFactor = rotationLimit;
+            //}
+            //if (rotationFactor < rotationLimit * -1){
+            //    rotationFactor = rotationLimit * -1;
+            //}
+            //Mathf.Clamp(rotationFactor, -45, 45);
+            //transform.Rotate(0, 0, -rotationFactor, Space.Self);
+            //transform.localRotation.z = transform.localRotation.z * velocity.y;
+        }
+        else{
+            anim.SetTrigger("idle");
+            //transform.localRotation.z = 0;
+        }
+        //else{
+        //    if (Mathf.Abs(directionalInput.x) > 0)
+        //    {
+        //        anim.SetTrigger("walk");
+        //    }
+        //    else
+        //    {
+        //        anim.SetTrigger("idle");
+        //    }
+        //}
 
         if (directionalInput.x>0){
             if (transform.localScale != ogScale){
@@ -121,10 +144,8 @@ public class Player : MonoBehaviour {
 	}
 
 	public void OnJumpInputDown() {
-        anim.SetTrigger("jump");
         if (wallSliding && jumpsPerformed < jumpsAllowed) {
             jumpsPerformed ++;
-              //anim.SetTrigger("jump");
             if (wallDirX == directionalInput.x) {
 				velocity.x = -wallDirX * wallJumpClimb.x;
 				velocity.y = wallJumpClimb.y;
