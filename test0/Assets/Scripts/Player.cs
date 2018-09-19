@@ -27,32 +27,32 @@ public class Player : MonoBehaviour {
 
     public float moveSpeed = 6;
 	public float sprintFactor = 2;
+    [HideInInspector]
+    public bool isSprinting = false;
 	float originalMoveSpeed;
-    int lastTouchedDirectionX = 1;
+    [HideInInspector]
+    public int lastTouchedDirectionX = 1;
 
     public int lungesAllowed = 1;
     int lungesPerformed = 0;
     public float lungeFactor = 3;
     public float minimumLunge = 4;
 
-
-    Vector3 velocity;
+    [HideInInspector]
+    public Vector3 velocity;
 	float velocityXSmoothing;
 
 	//reference to controller
 	Controller2D controller;
 
-	Vector2 directionalInput;
-	bool wallSliding;
+    [HideInInspector]
+	public Vector2 directionalInput;
+
+	public bool wallSliding;
 	int wallDirX;
 
     Vector3 ogScale;
-    //Quaternion ogRotation;
-    //public float rotationFactorMultiplier = 10;
-    //public float rotationLimit = 100;
-    //public float rotationFactor;
 
-    private Animator anim;
 	void Start() {
 		//initialize controller
 		controller = GetComponent<Controller2D> ();
@@ -61,10 +61,7 @@ public class Player : MonoBehaviour {
 		maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
 		minJumpVelocity = Mathf.Sqrt (2 * Mathf.Abs (gravity) * minJumpHeight);
 		originalMoveSpeed = moveSpeed;
-        anim = GetComponentInChildren<Animator>();
-       
-        ogScale = transform.localScale;
-        //ogRotation = transform.localRotation;
+
 	}
 
 	void Update() {
@@ -86,53 +83,10 @@ public class Player : MonoBehaviour {
             }else{
             }
 		}
-        HandleAnimation();
+      
 
     }
-    public void HandleAnimation(){
-        if (wallSliding){
-            anim.SetTrigger("wallSlide");
-        }
-        else if (!controller.collisions.below){
-            anim.SetTrigger("jump");
-            //rotationFactor = velocity.y /rotationFactorMultiplier;
-            //if (rotationFactor > rotationLimit){
-            //    rotationFactor = rotationLimit;
-            //}
-            //if (rotationFactor < rotationLimit * -1){
-            //    rotationFactor = rotationLimit * -1;
-            //}
-            //Mathf.Clamp(rotationFactor, -45, 45);
-            //transform.Rotate(0, 0, -rotationFactor, Space.Self);
-            //transform.localRotation.z = transform.localRotation.z * velocity.y;
-        }
-        else{
-            anim.SetTrigger("idle");
-            //transform.localRotation.z = 0;
-        }
-        //else{
-        //    if (Mathf.Abs(directionalInput.x) > 0)
-        //    {
-        //        anim.SetTrigger("walk");
-        //    }
-        //    else
-        //    {
-        //        anim.SetTrigger("idle");
-        //    }
-        //}
 
-        if (directionalInput.x>0){
-            if (transform.localScale != ogScale){
-                transform.localScale = ogScale;
-            }
-        }else if(directionalInput.x<0) {
-            Vector3 newScale = ogScale;
-            newScale.x *= -1;
-            if (transform.localScale != newScale){
-                transform.localScale = newScale;
-            }
-        }
-    }
 	public void SetDirectionalInput (Vector2 input) {
 		directionalInput = input;
         if (input.x > 0){
@@ -196,10 +150,12 @@ public class Player : MonoBehaviour {
             velocity.x = thisVelocityX * lungeFactor * lastTouchedDirectionX;
         }
 		moveSpeed *= sprintFactor;
+        isSprinting = true;
 	}
 
 	public void OnSprintInputUp(){
 		moveSpeed = originalMoveSpeed;
+        isSprinting = false;
 	}
 
 
