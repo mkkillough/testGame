@@ -82,7 +82,7 @@ public class Wolf_AnimationController : MonoBehaviour {
         else
         {
             hurtSpinFactor = ogHurtSpinFactor;
-            if (Mathf.Abs(player.velocity.x) > .1f)
+            if (Mathf.Abs(player.velocity.x) > .25f)
             {
                 if (player.isSprinting)
                 {

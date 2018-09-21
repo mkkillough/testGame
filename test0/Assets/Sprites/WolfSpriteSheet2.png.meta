@@ -141,9 +141,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 181
-        width: 130
-        height: 101
+        y: 195
+        width: 135
+        height: 90
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -161,9 +161,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 276
-        y: 189
-        width: 137
-        height: 104
+        y: 201
+        width: 128
+        height: 90
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -182,8 +182,8 @@ TextureImporter:
         serializedVersion: 2
         x: 277
         y: 68
-        width: 152
-        height: 134
+        width: 150
+        height: 126
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,10 +200,10 @@ TextureImporter:
       name: WolfSpriteSheet2_5
       rect:
         serializedVersion: 2
-        x: 400
-        y: 190
-        width: 150
-        height: 91
+        x: 407
+        y: 197
+        width: 134
+        height: 90
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -220,10 +220,10 @@ TextureImporter:
       name: WolfSpriteSheet2_6
       rect:
         serializedVersion: 2
-        x: 531
-        y: 185
-        width: 158
-        height: 105
+        x: 543
+        y: 197
+        width: 137
+        height: 90
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -240,10 +240,10 @@ TextureImporter:
       name: WolfSpriteSheet2_7
       rect:
         serializedVersion: 2
-        x: 677
-        y: 181
-        width: 152
-        height: 105
+        x: 681
+        y: 197
+        width: 148
+        height: 90
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -280,10 +280,10 @@ TextureImporter:
       name: WolfSpriteSheet2_9
       rect:
         serializedVersion: 2
-        x: 118
+        x: 127
         y: 37
-        width: 153
-        height: 115
+        width: 144
+        height: 113
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -340,12 +340,12 @@ TextureImporter:
       name: "WolfSpriteSheet2_\uF7392.1"
       rect:
         serializedVersion: 2
-        x: 143
-        y: 187
-        width: 131
-        height: 97
+        x: 141
+        y: 197
+        width: 128
+        height: 90
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
