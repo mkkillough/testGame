@@ -46,13 +46,14 @@ public class Player : MonoBehaviour {
 	float velocityXSmoothing;
 
 	//reference to controller
-	Controller2D controller;
+    [HideInInspector]
+	public Controller2D controller;
 
     [HideInInspector]
 	public Vector2 directionalInput;
 
 	public bool wallSliding;
-    [HideInInspector]
+    //[HideInInspector]
 	public int wallDirX;
 
     Vector3 ogScale;

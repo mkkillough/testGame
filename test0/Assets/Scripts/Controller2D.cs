@@ -95,7 +95,17 @@ public class Controller2D : RaycastController {
 					collisions.right = directionX == 1;
 				}
 			}
-		}
+
+            Vector2 rayOrigin1 = (directionX == 1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
+            rayOrigin1 += Vector2.up * (horizontalRaySpacing * i);
+            RaycastHit2D hit1 = Physics2D.Raycast(rayOrigin1, Vector2.left * directionX, rayLength, collisionMask);
+
+            Debug.DrawRay(rayOrigin1, Vector2.left * directionX, Color.blue);
+
+            if (hit1){
+                collisions.behind = true;
+            }
+        }
 	}
 
 	void VerticalCollisions(ref Vector2 moveAmount) {
@@ -225,7 +235,7 @@ public class Controller2D : RaycastController {
 	public struct CollisionInfo {
 		public bool above, below;
 		public bool left, right;
-
+        public bool behind;
 		public bool climbingSlope;
 		public bool descendingSlope;
 		public bool slidingDownMaxSlope;
@@ -239,6 +249,7 @@ public class Controller2D : RaycastController {
 		public void Reset() {
 			above = below = false;
 			left = right = false;
+            behind = false;
 			climbingSlope = false;
 			descendingSlope = false;
 			slidingDownMaxSlope = false;

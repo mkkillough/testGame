@@ -4,7 +4,7 @@ using UnityEngine;
 
 //require controller
 public class Wolf_AnimationController : MonoBehaviour {
-
+    public float timeScale = 1f;
     //reference to player
     Player player;
 
@@ -17,11 +17,14 @@ public class Wolf_AnimationController : MonoBehaviour {
 
     public float jumpAngleSteepness = 1.5f;
     public float jumpAngleLimit = -1;
+    public float slopeAngle;
+    public int hitBehind = -1;
     float fallHurtVelocity;
     float hurtSpinFactor = .001f;
     float ogHurtSpinFactor;
     // Use this for initialization
     void Start () {
+
         //initialize player
         player = GetComponentInParent<Player>();
         anim = GetComponent<Animator>();
@@ -31,9 +34,16 @@ public class Wolf_AnimationController : MonoBehaviour {
         currentAngles = transform.eulerAngles;
         fallHurtVelocity = player.fallHurtVelocity;
         ogHurtSpinFactor = hurtSpinFactor;
+
     }
     void FixedUpdate()
-    {
+    {   if (player.controller.collisions.behind){
+            hitBehind = 1;
+            }else{
+            hitBehind = -1;
+            }
+        slopeAngle = player.controller.collisions.slopeAngle;
+        Time.timeScale = timeScale;
         if (Mathf.Abs(player.velocity.y) < fallHurtVelocity)
         {
             transform.localRotation = Quaternion.Euler(0, 0, 0);
@@ -92,10 +102,19 @@ public class Wolf_AnimationController : MonoBehaviour {
                 {
                     anim.SetTrigger("walk");
                 }
+
             }
             else
             {
                 anim.SetTrigger("idle");
+            }
+            if (Mathf.Abs(player.controller.collisions.slopeAngle) > .5f)
+            {
+                transform.Rotate(Vector3.back * slopeAngle * player.lastTouchedDirectionX * hitBehind);
+                Vector3 newPosition = ogPosition;
+            newPosition.x = -.33f * hitBehind * player.lastTouchedDirectionX;
+                newPosition.y = -.05f;
+                transform.localPosition = newPosition;
             }
 
         }
