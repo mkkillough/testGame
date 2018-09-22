@@ -22,6 +22,11 @@ public class Wolf_AnimationController : MonoBehaviour {
     float fallHurtVelocity;
     float hurtSpinFactor = .001f;
     float ogHurtSpinFactor;
+
+    public bool climbingSlope;
+
+
+    public float lastNonZeroSlopeAngle;
     // Use this for initialization
     void Start () {
 
@@ -36,13 +41,19 @@ public class Wolf_AnimationController : MonoBehaviour {
         ogHurtSpinFactor = hurtSpinFactor;
 
     }
-    void FixedUpdate()
-    {   if (player.controller.collisions.behind){
+    void Update()
+    {
+        climbingSlope = player.controller.collisions.climbingSlope;
+
+        if (player.controller.collisions.behind){
             hitBehind = 1;
             }else{
             hitBehind = -1;
             }
         slopeAngle = player.controller.collisions.slopeAngle;
+        if (slopeAngle > 0){
+            lastNonZeroSlopeAngle = slopeAngle;
+        }
         Time.timeScale = timeScale;
         if (Mathf.Abs(player.velocity.y) < fallHurtVelocity)
         {
@@ -108,25 +119,36 @@ public class Wolf_AnimationController : MonoBehaviour {
             {
                 anim.SetTrigger("idle");
             }
-            if (Mathf.Abs(player.controller.collisions.slopeAngle) > .5f)
-            {
-                transform.Rotate(Vector3.back * slopeAngle * player.lastTouchedDirectionX * hitBehind);
+            //if (Mathf.Abs(player.controller.collisions.slopeAngle) > 1)
+            //{  
+
+            if(hitBehind == 1){
+                transform.Rotate(Vector3.back * lastNonZeroSlopeAngle * player.lastTouchedDirectionX);
                 Vector3 newPosition = ogPosition;
-            newPosition.x = -.33f * hitBehind * player.lastTouchedDirectionX;
+                newPosition.x = -.33f * player.lastTouchedDirectionX;
                 newPosition.y = -.05f;
                 transform.localPosition = newPosition;
             }
+            if (climbingSlope){
+                transform.Rotate(Vector3.forward * lastNonZeroSlopeAngle * player.lastTouchedDirectionX);
+                Vector3 newPosition = ogPosition;
+                newPosition.x = .33f * player.lastTouchedDirectionX;
+                newPosition.y = -.05f;
+                transform.localPosition = newPosition;
+            }
+                
+            //}
 
         }
 
-        if (player.directionalInput.x > 0)
+        if (player.lastTouchedDirectionX > 0)
         {
             if (transform.localScale != ogScale)
             {
                 transform.localScale = ogScale;
             }
         }
-        else if (player.directionalInput.x < 0)
+        else if (player.lastTouchedDirectionX < 0)
         {
             Vector3 newScale = ogScale;
             newScale.x *= -1;
