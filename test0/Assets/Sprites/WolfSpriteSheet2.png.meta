@@ -15,6 +15,9 @@ TextureImporter:
     21300020: WolfSpriteSheet2_10
     21300022: WolfSpriteSheet2_11
     21300024: "WolfSpriteSheet2_\uF7392.1"
+    21300026: ColorOrb_0
+    21300028: ColorOrb_1
+    21300030: ColorOrb_2
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -352,6 +355,66 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 6bd13ffa4ee4c4f2c867162e2df031e2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ColorOrb_0
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 330
+        width: 55
+        height: 55
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 787246853beb348c6b167614afd87bd1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ColorOrb_1
+      rect:
+        serializedVersion: 2
+        x: 436
+        y: 330
+        width: 55
+        height: 55
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d460ba162fc04320a15c200bade3b02
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ColorOrb_2
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 329
+        width: 55
+        height: 55
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 193739e6cb7c243caa90b14796a99290
       vertices: []
       indices: 
       edges: []

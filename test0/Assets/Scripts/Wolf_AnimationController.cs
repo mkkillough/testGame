@@ -5,6 +5,7 @@ using UnityEngine;
 //require controller
 public class Wolf_AnimationController : MonoBehaviour {
     public float timeScale = 1f;
+    float ogTimeScale;
     //reference to player
     Player player;
 
@@ -39,12 +40,13 @@ public class Wolf_AnimationController : MonoBehaviour {
         currentAngles = transform.eulerAngles;
         fallHurtVelocity = player.fallHurtVelocity;
         ogHurtSpinFactor = hurtSpinFactor;
+        ogTimeScale = timeScale;
 
     }
     void Update()
     {
         climbingSlope = player.controller.collisions.climbingSlope;
-
+        timeScale = ogTimeScale;
         if (player.controller.collisions.behind){
             hitBehind = 1;
             }else{
@@ -77,6 +79,7 @@ public class Wolf_AnimationController : MonoBehaviour {
         }
         else if (!controller.collisions.below)
         {
+            //Time.timeScale = timeScale * .33f;
             anim.SetTrigger("jump");
             float velocityMultiplier = player.velocity.y * player.lastTouchedDirectionX * jumpAngleSteepness;
             if (jumpAngleLimit != -1 && Mathf.Abs(player.velocity.y) < fallHurtVelocity)
