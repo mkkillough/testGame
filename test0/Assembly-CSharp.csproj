@@ -61,16 +61,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\characters\Enemy\Enemy.cs" />
+    <Compile Include="Assets\Scripts\characters\Enemy\Enemy_Animation.cs" />
+    <Compile Include="Assets\Scripts\characters\player\Player.cs" />
+    <Compile Include="Assets\Scripts\characters\player\Wolf_AnimationController.cs" />
     <Compile Include="Assets\Scripts\ColorOrb.cs" />
-    <Compile Include="Assets\Scripts\Controller2D.cs" />
-    <Compile Include="Assets\Scripts\Enemy.cs" />
-    <Compile Include="Assets\Scripts\Enemy_Animation.cs" />
-    <Compile Include="Assets\Scripts\PlatformController.cs" />
-    <Compile Include="Assets\Scripts\Player.cs" />
-    <Compile Include="Assets\Scripts\PlayerInput.cs" />
-    <Compile Include="Assets\Scripts\RaycastController.cs" />
-    <Compile Include="Assets\Scripts\Wolf_AnimationController.cs" />
+    <Compile Include="Assets\Scripts\ColorOrb_Animation.cs" />
+    <Compile Include="Assets\Scripts\utilities\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\utilities\Controller2D.cs" />
+    <Compile Include="Assets\Scripts\utilities\PlatformController.cs" />
+    <Compile Include="Assets\Scripts\utilities\PlayerInput.cs" />
+    <Compile Include="Assets\Scripts\utilities\RaycastController.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>/Users/montykillough/Desktop/test1/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
